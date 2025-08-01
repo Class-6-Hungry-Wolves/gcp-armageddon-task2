@@ -13,3 +13,5 @@ variable "github_secret_name" {}
 variable "github_url" {}
 
 variable "github_installation_id" {}
+
+variable "service_account" {}

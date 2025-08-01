@@ -24,13 +24,14 @@ resource "google_cloudbuildv2_connection" "github-connection" {
 }
 
 resource "google_cloudbuildv2_repository" "flask-repository" {
-  name              = "flask-repo"
+  name              = "cloud-run-ex"
   parent_connection = google_cloudbuildv2_connection.github-connection.id
   remote_uri        = var.github_url
 }
 
 resource "google_cloudbuild_trigger" "flask-repo-trigger" {
   location = var.region
+  service_account = "projects/${var.project_id}/serviceAccounts/${var.service_account}"
 
   repository_event_config {
     repository = google_cloudbuildv2_repository.flask-repository.id
@@ -43,7 +44,7 @@ resource "google_cloudbuild_trigger" "flask-repo-trigger" {
 
   substitutions = {
     _REGION     = var.region
-    _REPO_NAME = var.repo_name
+    _REPO_NAME = "cloud-run-ex"
     _IMAGE_NAME = "cloudrunex"
   }
 }
