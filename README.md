@@ -11,6 +11,7 @@ flask-app/
 ├── templates/
 │   └── index.html        # HTML template
 ├── .env                  # Environment variables
+├── Dockerfile            # Docker build instructions
 ├── requirements.txt      # Python dependencies       
 └── README.md             # This file
 ```
@@ -26,6 +27,11 @@ flask-app/
 
 ## Quick Start
 
+## Build Dockerfile image
+   ```bash
+   docker build -t cloudrunex .
+   ```
+
 ### Clone and setup
    ```bash
    git clone https://github.com/aaron-dm-mcdonald/cloud-run-ex.git
@@ -36,8 +42,7 @@ flask-app/
 
 1. **Run the app**
    ```bash
-   pip install -r requirements.txt
-   python main.py
+   docker run -p 8080:8080 --env-file .env cloudrunex
    ```
 
 2. **Visit** `http://localhost:8080`
