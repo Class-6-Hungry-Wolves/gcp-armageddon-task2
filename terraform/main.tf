@@ -47,6 +47,4 @@ resource "google_cloudbuild_trigger" "flask-repo-trigger" {
     _REPO_NAME = "cloud-run-ex"
     _IMAGE_NAME = "cloudrunex"
   }
-
-  include_build_logs = "INCLUDE_BUILD_LOGS_STATUS"
 }

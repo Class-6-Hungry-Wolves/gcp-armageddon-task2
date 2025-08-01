@@ -13,3 +13,5 @@ steps:
 #   args: ['run', 'deploy', 'SERVICE_NAME', '--image', 'LOCATION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE', '--region', 'SERVICE_REGION']
 images:
   - '$_REGION-docker.pkg.dev/$PROJECT_ID/$REPO_NAME/$_IMAGE_NAME'
+
+logging: CLOUD_LOGGING_ONLY
