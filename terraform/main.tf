@@ -44,7 +44,7 @@ resource "google_cloudbuild_trigger" "flask-repo-trigger" {
 
   substitutions = {
     _REGION     = var.region
-    _REPO_NAME = "cloud-run-ex"
+    _REPO_NAME =  google_artifact_registry_repository.flask-repo.repository_id
     _IMAGE_NAME = "cloudrunex"
   }
 }
