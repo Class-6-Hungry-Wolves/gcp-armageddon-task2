@@ -30,7 +30,7 @@ resource "google_cloudbuildv2_repository" "flask-repository" {
 }
 
 resource "google_cloudbuild_trigger" "flask-repo-trigger" {
-  location = var.region
+  location        = var.region
   service_account = "projects/${var.project_id}/serviceAccounts/${var.service_account}"
 
   repository_event_config {
@@ -44,7 +44,7 @@ resource "google_cloudbuild_trigger" "flask-repo-trigger" {
 
   substitutions = {
     _REGION     = var.region
-    _REPO_NAME =  google_artifact_registry_repository.flask-repo.repository_id
+    _REPO_NAME  = google_artifact_registry_repository.flask-repo.repository_id
     _IMAGE_NAME = "cloudrunex"
   }
 }
@@ -57,30 +57,134 @@ resource "google_cloud_run_service_iam_member" "default" {
   member   = "allUsers"
 }
 
-resource "google_cloud_run_v2_service" "default" {
+# resource "google_cloud_run_v2_service" "default" {
+#   name     = "cloudrun-service"
+#   location = var.region
+#   deletion_protection = false
+#   ingress = "INGRESS_TRAFFIC_ALL"
+
+#   template {
+#     containers {
+#       image = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.flask-repo.repository_id}/cloudrunex"
+
+#       env {
+#         name  = "FLASK_DEBUG"
+#         value = "false"
+#       }
+
+#       env {
+#         name  = "IMAGE_URL"
+#         value = "https://static1.srcdn.com/wordpress/wp-content/uploads/2022/09/Flash-Speed-Force-Running-DC-Comics.jpg?q=50&fit=crop&w=767&h=431&dpr=1.5"
+#       }
+
+#       env {
+#         name = "HEADER_TEXT"
+#         value = "Hello from Google Cloud Run!"
+#       }
+#     }
+#   }
+# }
+
+resource "google_cloud_run_service" "rev1" {
   name     = "cloudrun-service"
   location = var.region
-  deletion_protection = false
-  ingress = "INGRESS_TRAFFIC_ALL"
+
+  metadata {
+    annotations = {
+      "run.googleapis.com/client-name" = "terraform"
+    }
+  }
 
   template {
-    containers {
-      image = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.flask-repo.repository_id}/cloudrunex"
+    metadata {
+      name = "cloudrun-service-rev1"
+    }
 
-      env {
-        name  = "FLASK_DEBUG"
-        value = "false"
-      }
+    spec {
+      containers {
+        image = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.flask-repo.repository_id}/cloudrunex"
 
-      env {
-        name  = "IMAGE_URL"
-        value = "https://static1.srcdn.com/wordpress/wp-content/uploads/2022/09/Flash-Speed-Force-Running-DC-Comics.jpg?q=50&fit=crop&w=767&h=431&dpr=1.5"
-      }
+        env {
+          name  = "IMAGE_URL"
+          value = "https://static1.srcdn.com/wordpress/wp-content/uploads/2022/09/Flash-Speed-Force-Running-DC-Comics.jpg?q=50&fit=crop&w=767&h=431&dpr=1.5"
+        }
 
-      env {
-        name = "HEADER_TEXT"
-        value = "Hello from Google Cloud Run!"
+        env {
+          name  = "HEADER_TEXT"
+          value = "Flash!"
+        }
       }
     }
   }
+
+  traffic {
+    percent         = 100
+    latest_revision = true
+  }
 }
+
+resource "google_cloud_run_service" "rev2" {
+  name     = "cloudrun-service"
+  location = var.region
+
+  metadata {
+    annotations = {
+      "run.googleapis.com/client-name" = "terraform"
+    }
+  }
+
+  template {
+    metadata {
+      name = "cloudrun-service-rev2"
+    }
+
+    spec {
+      containers {
+        image = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.flask-repo.repository_id}/cloudrunex"
+
+        env {
+          name  = "IMAGE_URL"
+          value = "https://static1.srcdn.com/wordpress/wp-content/uploads/2024/05/quicksilver-in-marvel-comics-running-and-grimacing.jpg"
+        }
+
+        env {
+          name  = "HEADER_TEXT"
+          value = "Quicksliver!"
+        }
+      }
+    }
+  }
+
+  traffic {
+    percent         = 100
+    latest_revision = true
+  }
+}
+
+resource "google_cloud_run_service" "traffic_split" {
+  name     = "cloudrun-service"
+  location = var.region
+
+  metadata {
+    annotations = {
+      "run.googleapis.com/client-name" = "terraform"
+    }
+  }
+
+  traffic {
+    revision_name = "cloudrun-service-rev1"
+    percent       = 50
+  }
+
+  traffic {
+    revision_name = "cloudrun-service-rev2"
+    percent       = 50
+  }
+
+  depends_on = [
+    google_cloud_run_service.rev1,
+    google_cloud_run_service.rev2
+  ]
+}
+
+
