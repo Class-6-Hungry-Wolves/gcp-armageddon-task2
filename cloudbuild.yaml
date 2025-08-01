@@ -5,6 +5,7 @@ steps:
     # Push the image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', '_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME']
+    
 options:
   logging: CLOUD_LOGGING_ONLY
 
