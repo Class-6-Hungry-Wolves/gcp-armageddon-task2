@@ -12,7 +12,7 @@ resource "google_artifact_registry_repository" "flask-repo" {
 }
 
 resource "google_cloudbuildv2_connection" "github-connection" {
-  location = "us-central1"
+  location = var.region
   name     = "github-connection"
 
   github_config {
@@ -74,7 +74,7 @@ resource "google_cloud_run_v2_service" "default" {
 
       env {
         name  = "IMAGE_URL"
-        value = "https://screenrant.com/flash-wasting-his-speed-running-on-air-water-earth/"
+        value = "https://static1.srcdn.com/wordpress/wp-content/uploads/2022/09/Flash-Speed-Force-Running-DC-Comics.jpg?q=50&fit=crop&w=767&h=431&dpr=1.5"
       }
 
       env {
