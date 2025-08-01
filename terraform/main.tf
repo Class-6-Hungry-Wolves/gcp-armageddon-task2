@@ -48,3 +48,39 @@ resource "google_cloudbuild_trigger" "flask-repo-trigger" {
     _IMAGE_NAME = "cloudrunex"
   }
 }
+
+resource "google_cloud_run_service_iam_member" "default" {
+  location = var.region
+  project  = var.project_id
+  service  = "cloudrun-service"
+  role     = "roles/run.invoker"
+  member   = "allUsers"
+}
+
+resource "google_cloud_run_v2_service" "default" {
+  name     = "cloudrun-service"
+  location = var.region
+  deletion_protection = false
+  ingress = "INGRESS_TRAFFIC_ALL"
+
+  template {
+    containers {
+      image = "${var.region}-docker.pkg.dev/${var.project_id}/${google_artifact_registry_repository.flask-repo.repository_id}/cloudrunex"
+
+      env {
+        name  = "FLASK_DEBUG"
+        value = "false"
+      }
+
+      env {
+        name  = "IMAGE_URL"
+        value = "https://screenrant.com/flash-wasting-his-speed-running-on-air-water-earth/"
+      }
+
+      env {
+        name = "HEADER_TEXT"
+        value = "Hello from Google Cloud Run!"
+      }
+    }
+  }
+}
