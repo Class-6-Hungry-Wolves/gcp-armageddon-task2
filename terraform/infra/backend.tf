@@ -1,7 +1,7 @@
 terraform {
   backend "gcs" {
     bucket      = "terraform-state-jourdan"
-    prefix      = "terraform/state"
+    prefix      = "terraform/infra"
     credentials = "appdeploy-467712-21a6ba8a2566.json"
   }
 
