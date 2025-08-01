@@ -1,4 +1,49 @@
 provider "google" {
-  project = var.project_id
-  region  = var.region
+  project     = var.project_id
+  region      = var.region
+  credentials = "appdeploy-467712-21a6ba8a2566.json"
+}
+
+resource "google_artifact_registry_repository" "flask-repo" {
+  location      = var.region
+  repository_id = "flask-repository"
+  description   = "docker repository for flask app"
+  format        = "DOCKER"
+}
+
+resource "google_cloudbuildv2_connection" "github-connection" {
+  location = "us-central1"
+  name     = "github-connection"
+
+  github_config {
+    app_installation_id = var.github_installation_id
+    authorizer_credential {
+      oauth_token_secret_version = "projects/${var.project_id}/secrets/${var.github_secret_name}/versions/latest"
+    }
+  }
+}
+
+resource "google_cloudbuildv2_repository" "flask-repository" {
+  name              = "flask-repo"
+  parent_connection = google_cloudbuildv2_connection.github-connection.id
+  remote_uri        = var.github_url
+}
+
+resource "google_cloudbuild_trigger" "flask-repo-trigger" {
+  location = var.region
+
+  repository_event_config {
+    repository = google_cloudbuildv2_repository.flask-repository.id
+    push {
+      branch = "main"
+    }
+  }
+
+  filename = "cloudbuild.yaml"
+
+  substitutions = {
+    _REGION     = var.region
+    _REPO_NAME = var.repo_name
+    _IMAGE_NAME = "cloudrunex"
+  }
 }
