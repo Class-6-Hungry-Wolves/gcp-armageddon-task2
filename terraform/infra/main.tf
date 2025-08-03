@@ -7,7 +7,7 @@ provider "google" {
 resource "google_artifact_registry_repository" "flask-repo" {
   location      = var.region
   repository_id = "flask-repository"
-  description   = "docker repository for flask app"
+  description   = "docker repository for flask app."
   format        = "DOCKER"
 }
 
