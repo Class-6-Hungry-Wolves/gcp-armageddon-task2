@@ -6,9 +6,11 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME']
     # Terraform apply for deploy
+  - name: 'ubuntu'
+    script: cd terraform/deploy
   - id: 'terraform init'
     name: 'hashicorp/terraform:1.0.0'
-    script: cd terraform/deploy && terraform init
+    script: terraform init
   - id: 'terraform plan'
     name: 'hashicorp/terraform:1.0.0'
     script: terraform plan
