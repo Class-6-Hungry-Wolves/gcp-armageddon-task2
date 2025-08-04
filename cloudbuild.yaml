@@ -19,10 +19,14 @@ steps:
   - id: 'terraform apply'
     name: 'hashicorp/terraform:1.0.0'
     dir: terraform/deploy
-    script: terraform apply --auto-approve
+    script: terraform apply --auto-approve -var="project_id=$_PROJECT_ID" -var="region=$_REGION"
 
 options:
   logging: CLOUD_LOGGING_ONLY
 
 images:
   - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME'
+
+substitutions:
+  _REGION: 'us-central1'
+  _PROJECT_ID: 'appdeploy-467712'
