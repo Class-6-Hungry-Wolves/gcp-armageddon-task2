@@ -8,8 +8,8 @@ steps:
     # Terraform apply for deploy
   - id: 'terraform init'
     name: 'hashicorp/terraform:1.0.0'
-    # env:
-    #   - 'GOOGLE_APPLICATION_CREDENTIALS=appdeploy-467712-21a6ba8a2566.json'
+    env:
+      - 'GOOGLE_APPLICATION_CREDENTIALS=appdeploy-467712-21a6ba8a2566.json'
     dir: terraform/deploy
     script: terraform init
   - id: 'terraform plan'
@@ -24,10 +24,5 @@ steps:
 options:
   logging: CLOUD_LOGGING_ONLY
 
-# Deploy image to Cloud Run
-
-# - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-#   entrypoint: gcloud
-#   args: ['run', 'deploy', 'SERVICE_NAME', '--image', 'LOCATION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE', '--region', 'SERVICE_REGION']
 images:
   - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME'

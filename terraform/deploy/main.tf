@@ -1,7 +1,7 @@
 provider "google" {
   project     = var.project_id
   region      = var.region
-  credentials = "appdeploy-467712-21a6ba8a2566.json"
+  #credentials = "appdeploy-467712-21a6ba8a2566.json"
 }
 
 resource "google_cloud_run_service_iam_member" "default" {
