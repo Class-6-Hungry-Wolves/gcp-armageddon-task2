@@ -8,8 +8,8 @@ steps:
     # Terraform apply for deploy
   - id: 'terraform init'
     name: 'hashicorp/terraform:1.0.0'
-    env:
-      - 'GOOGLE_APPLICATION_CREDENTIALS=appdeploy-467712-21a6ba8a2566.json'
+    # env:
+    #   - 'GOOGLE_APPLICATION_CREDENTIALS=appdeploy-467712-21a6ba8a2566.json'
     dir: terraform/deploy
     script: terraform init
   - id: 'terraform plan'
