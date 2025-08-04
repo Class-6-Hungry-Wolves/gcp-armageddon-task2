@@ -1,24 +1,28 @@
 # Global env for steps
 steps:
     # Build the image
-  - name: 'gcr.io/cloud-builders/docker'
+  - id: 'build image'
+    name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME', '.']
+    
     # Push the image to Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
+  - id: 'push image'
+    name: 'gcr.io/cloud-builders/docker'
     args: ['push', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME']
+
     # Terraform apply for deploy
   - id: 'terraform init'
-    name: 'hashicorp/terraform:1.0.0'
-    # env:
-    #   - 'GOOGLE_APPLICATION_CREDENTIALS=appdeploy-467712-21a6ba8a2566.json'
+    name: 'hashicorp/terraform:1.12.0'
     dir: terraform/deploy
     script: terraform init
+
   - id: 'terraform plan'
-    name: 'hashicorp/terraform:1.0.0'
+    name: 'hashicorp/terraform:1.12.0'
     dir: terraform/deploy
     script: terraform plan -out=tfplan
+
   - id: 'terraform apply'
-    name: 'hashicorp/terraform:1.0.0'
+    name: 'hashicorp/terraform:1.12.0'
     dir: terraform/deploy
     script: terraform apply tfplan 
 
