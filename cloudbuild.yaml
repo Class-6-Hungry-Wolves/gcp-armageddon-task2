@@ -1,8 +1,4 @@
 steps:
-    # Terraform apply for infra
-  - name: 'hashicorp/terraform:light'
-    entrypoint: 'bash'  
-    args: ['-c', 'cd terraform/infra && terraform init && terraform apply -auto-approve']
     # Build the image
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME', '.']
