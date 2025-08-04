@@ -16,9 +16,9 @@ steps:
   - id: 'terraform plan'
     name: 'hashicorp/terraform:1.0.0'
     dir: terraform/deploy
-    env: 
-      - 'TF_VAR_project_id=$PROJECT_ID' 
-      - 'TF_VAR_region=$REGION' 
+    # env: 
+    #   - 'TF_VAR_project_id=$PROJECT_ID' 
+    #   - 'TF_VAR_region=$_REGION' 
     script: terraform plan -out=tfplan
   - id: 'terraform apply'
     name: 'hashicorp/terraform:1.0.0'
