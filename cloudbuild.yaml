@@ -6,7 +6,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME']
     # Terraform apply for deploy
-  - name: 'hashicorp/terraform:1.8.4'
+  - name: 'hashicorp/terraform:1.0.0'
     entrypoint: 'bash'
     args: ['-c', 'cd terraform/deploy &&terraform init && terraform apply -auto-approve']
 
