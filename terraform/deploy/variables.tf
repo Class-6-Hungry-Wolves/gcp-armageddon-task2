@@ -1,5 +1,5 @@
 variable "project_id" {
-  value = "PROJECT_ID"
+  default = "PROJECT_ID"
 }
 
 variable "region" {
