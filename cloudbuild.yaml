@@ -6,18 +6,17 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME']
     # Terraform apply for deploy
-  - 
-    id: 'change directory to terraform/deploy'
-    name: 'hashicorp/terraform:1.0.0'
-    script: cd terraform/deploy
   - id: 'terraform init'
     name: 'hashicorp/terraform:1.0.0'
+    dir: terraform/deploy
     script: terraform init
   - id: 'terraform plan'
     name: 'hashicorp/terraform:1.0.0'
+    dir: terraform/deploy
     script: terraform plan
   - id: 'terraform apply'
     name: 'hashicorp/terraform:1.0.0'
+    dir: terraform/deploy
     script: terraform apply --auto-approve
 
 options:
