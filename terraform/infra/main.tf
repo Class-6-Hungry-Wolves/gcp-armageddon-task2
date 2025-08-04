@@ -4,6 +4,7 @@ provider "google" {
   credentials = "appdeploy-467712-21a6ba8a2566.json"
 }
 
+# test
 resource "google_artifact_registry_repository" "flask-repo" {
   location      = var.region
   repository_id = "flask-repository"
