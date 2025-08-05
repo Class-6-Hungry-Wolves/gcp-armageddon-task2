@@ -28,5 +28,4 @@ options:
   env:
     - 'TF_VAR_project_id=$PROJECT_ID'
     - 'TF_VAR_region=$_REGION'
-images:
-  - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME'
+
