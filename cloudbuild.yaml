@@ -32,7 +32,7 @@ steps:
       - 'pipefail'
       - '-c'
       - |-
-        TEST=$$(gcloud run revisions list --region=$$_REGION --format="value(metadata.name)")
+        TEST=$$(gcloud run revisions list --region=$_REGION --format="value(metadata.name)")
         echo "$${TEST}"
 
 options:
