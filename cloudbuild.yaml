@@ -31,16 +31,8 @@ steps:
       - -c
       - |
         set -e
-
-        REVISIONS=$(gcloud run revisions list \
-          --region=$_REGION \
-          --format='value(metadata.name)' 
-
-        REV_ARR=($REVISIONS)
-
-        gcloud run services update-traffic \
-          --region=$_REGION \
-          --to-revisions=${REV_ARR[0]}=50,${REV_ARR[1]}=50
+        SERVICE_NAME=$(gcloud run services list --region=$_REGION --format="value(metadata.name)" | head -n 1)
+        REVISIONS=$(gcloud run revisions list --service=$SERVICE_NAME --region=$_REGION --format="value(metadata.name)")
 
 options:
   logging: CLOUD_LOGGING_ONLY
