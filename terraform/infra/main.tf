@@ -37,7 +37,7 @@ resource "google_cloudbuild_trigger" "flask-repo-trigger" {
   repository_event_config {
     repository = google_cloudbuildv2_repository.flask-repository.id
     push {
-      branch = "main"
+      branch = "revision-1"
     }
   }
 
