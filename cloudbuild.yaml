@@ -32,8 +32,14 @@ steps:
       - 'pipefail'
       - '-c'
       - |-
-        TEST=$$(gcloud run revisions list --region=$_REGION --format="value(metadata.name)")
-        echo "$${TEST}"
+        REVISIONS=$$(gcloud run revisions list --region=$_REGION --format="value(metadata.name)")
+
+        echo "$${REVISIONS[0]}"
+        echo "$${REVISIONS[1]}"
+
+        gcloud run services update-traffic cloudrun-service \
+          --to-revisions $${REVISIONS[0]}=50,$${REVISIONS[1]}=50 \
+          --region $_REGION 
 
 options:
   logging: CLOUD_LOGGING_ONLY
