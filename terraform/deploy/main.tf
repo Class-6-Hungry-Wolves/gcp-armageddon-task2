@@ -12,11 +12,6 @@ resource "google_cloud_run_service_iam_member" "default" {
   member   = "allUsers"
 }
 
-data "google_artifact_registry_repository" "flask-repo" {
-  location      = var.region
-  repository_id = "flask-repository"
-}
-
 resource "google_cloud_run_v2_service" "default" {
   name     = "cloudrun-service"
   location = var.region
