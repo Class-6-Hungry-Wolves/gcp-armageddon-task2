@@ -1,18 +1,36 @@
+# Global env for steps
 steps:
-  # Build the image
-  - name: 'gcr.io/cloud-builders/docker'
+    # Build the image
+  - id: 'build image'
+    name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME', '.']
+    
     # Push the image to Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
+  - id: 'push image'
+    name: 'gcr.io/cloud-builders/docker'
     args: ['push', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME']
+
+    # Terraform apply for deploy
+  - id: 'terraform init'
+    name: 'hashicorp/terraform:1.12.0'
+    dir: terraform/deploy
+    script: terraform init
+
+  - id: 'terraform plan'
+    name: 'hashicorp/terraform:1.12.0'
+    dir: terraform/deploy
+    script: terraform plan -out=tfplan
+
+  - id: 'terraform apply'
+    name: 'hashicorp/terraform:1.12.0'
+    dir: terraform/deploy
+    script: terraform apply tfplan 
 
 options:
   logging: CLOUD_LOGGING_ONLY
+  env:
+    - 'TF_VAR_project_id=$PROJECT_ID' 
+    - 'TF_VAR_region=$_REGION'
 
-# Deploy image to Cloud Run
-
-# - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-#   entrypoint: gcloud
-#   args: ['run', 'deploy', 'SERVICE_NAME', '--image', 'LOCATION-docker.pkg.dev/PROJECT_ID/REPOSITORY/IMAGE', '--region', 'SERVICE_REGION']
 images:
   - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME'
