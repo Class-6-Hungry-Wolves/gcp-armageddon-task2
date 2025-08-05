@@ -20,7 +20,7 @@ steps:
   - id: 'list revisions'
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'gcloud'
-    args: ['gcloud', 'run', 'revisions', 'list', '--region=$_REGION']
+    args: ['gcloud run revisions list --region=$_REGION']
 
     # Command for traffic with revisions 
 
