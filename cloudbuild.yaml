@@ -1,15 +1,5 @@
 # Global env for steps
 steps:
-    # Build the image
-  - id: 'build image'
-    name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME', '.']
-    
-    # Push the image to Artifact Registry
-  - id: 'push image'
-    name: 'gcr.io/cloud-builders/docker'
-    args: ['push', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME']
-
     # Terraform apply for deploy
   - id: 'terraform init'
     name: 'hashicorp/terraform:1.12.0'
@@ -24,7 +14,15 @@ steps:
   - id: 'terraform apply'
     name: 'hashicorp/terraform:1.12.0'
     dir: terraform/deploy
-    script: terraform apply tfplan 
+    script: terraform apply tfplan
+
+  # List revisions
+  - id: 'list revisions'
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: ['gcloud', 'run', 'revisions', 'list', '--region=$_REGION']
+
+    # Command for traffic with revisions 
 
 options:
   logging: CLOUD_LOGGING_ONLY

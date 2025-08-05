@@ -34,12 +34,12 @@ resource "google_cloud_run_v2_service" "default" {
 
       env {
         name  = "IMAGE_URL"
-        value = "https://static1.srcdn.com/wordpress/wp-content/uploads/2022/09/Flash-Speed-Force-Running-DC-Comics.jpg?q=50&fit=crop&w=767&h=431&dpr=1.5"
+        value = "https://i.imgur.com/k4YCmaA.jpeg"
       }
 
       env {
         name = "HEADER_TEXT"
-        value = "Hello from Google Cloud Run!"
+        value = "Theo Loves Waffle House!"
       }
     }
   }
