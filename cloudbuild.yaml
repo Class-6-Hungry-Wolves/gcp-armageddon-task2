@@ -22,7 +22,30 @@ steps:
       - revisions
       - list
       - --region=$_REGION
-      # Command for traffic with revisions 
+
+  # script for traffic splits
+  - id: 'traffic split'
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - -c
+      - |
+        #!/bin/bash
+        SERVICE_NAME=$(gcloud run services list --platform=managed --region=$_REGION --format="value(NAME)")
+        echo "Service Name: $SERVICE_NAME"
+        # Get the latest two revisions
+        REVISIONS=($(gcloud run revisions list --service=$SERVICE_NAME --platform=managed --region=$_REGION --sort-by=~CREATED --limit=2 --format="value(NAME)"))
+        if [ ${#REVISIONS[@]} -lt 2 ]; then
+          echo "Not enough revisions to perform traffic split."
+          exit 1
+        fi
+        echo "Latest Revisions: ${REVISIONS[0]}, ${REVISIONS[1]}"
+        # Split traffic 50/50 between the two latest revisions
+        gcloud run services update-traffic $SERVICE_NAME \
+          --to-revisions=${REVISIONS[0]}=50,${REVISIONS[1]}=50 \
+          --platform=managed \
+          --region=$_REGION
+
 options:
   logging: CLOUD_LOGGING_ONLY
   env:
