@@ -30,20 +30,22 @@ steps:
     args:
       - -c
       - |
-        #!/bin/bash
-        SERVICE_NAME=$(gcloud run services list --region=$_REGION --format="value(NAME)")
-        # Get the latest two revisions
-        REVISIONS=($(gcloud run revisions list --region=$_REGION --sort-by=~CREATED --limit=2 --format="value(NAME)"))
-        if [ ${#REVISIONS[@]} -lt 2 ]; then
-          echo "Not enough revisions to perform traffic split."
+        set -e
+
+        REVISIONS=$(gcloud run revisions list \
+          --region=$_REGION \
+          --format='value(metadata.name)' 
+
+        REV_ARR=($REVISIONS)
+        
+        if [ ${#REV_ARR[@]} -lt 2 ]; then
+          echo "No revisions found."
           exit 1
         fi
-        echo "Latest Revisions: ${REVISIONS[0]}, ${REVISIONS[1]}"
-        # Split traffic 50/50 between the two latest revisions
+
         gcloud run services update-traffic \
-          --to-revisions=${REVISIONS[0]}=50,${REVISIONS[1]}=50 \
-          --platform=managed \
-          --region=$_REGION
+          --region=$_REGION \
+          --to-revisions=${REV_ARR[0]}=50,${REV_ARR[1]}=50
 
 options:
   logging: CLOUD_LOGGING_ONLY
