@@ -37,11 +37,6 @@ steps:
           --format='value(metadata.name)' 
 
         REV_ARR=($REVISIONS)
-        
-        if [ ${#REV_ARR[@]} -lt 2 ]; then
-          echo "No revisions found."
-          exit 1
-        fi
 
         gcloud run services update-traffic \
           --region=$_REGION \
