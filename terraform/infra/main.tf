@@ -1,7 +1,7 @@
 provider "google" {
   project     = var.project_id
   region      = var.region
-  credentials = "appdeploy-467712-21a6ba8a2566.json"
+  credentials = "class65gcpproject-462600-3dd7a46c5330.json"
 }
 
 # test
@@ -37,7 +37,7 @@ resource "google_cloudbuild_trigger" "flask-repo-trigger" {
   repository_event_config {
     repository = google_cloudbuildv2_repository.flask-repository.id
     push {
-      branch = "revision-1"
+      branch = "revision-3"
     }
   }
 
