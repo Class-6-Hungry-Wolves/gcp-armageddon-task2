@@ -28,11 +28,11 @@ steps:
     name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'bash'
     args:
-      - -c
-      - |
-        set -e
-        SERVICE_NAME=$(gcloud run services list --region=$_REGION --format="value(metadata.name)" | head -n 1)
-        REVISIONS=$(gcloud run revisions list --service=$SERVICE_NAME --region=$_REGION --format="value(metadata.name)")
+      - '-eEuo'
+      - 'pipefail'
+      - '-c'
+      - |-
+        gcloud run revisions list --region=$_REGION
 
 options:
   logging: CLOUD_LOGGING_ONLY
