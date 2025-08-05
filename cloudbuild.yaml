@@ -40,7 +40,7 @@ steps:
         fi
         echo "Latest Revisions: ${REVISIONS[0]}, ${REVISIONS[1]}"
         # Split traffic 50/50 between the two latest revisions
-        gcloud run services update-traffic $SERVICE_NAME \
+        gcloud run services update-traffic \
           --to-revisions=${REVISIONS[0]}=50,${REVISIONS[1]}=50 \
           --platform=managed \
           --region=$_REGION
