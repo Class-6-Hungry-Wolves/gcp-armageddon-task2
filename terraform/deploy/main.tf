@@ -10,6 +10,7 @@ resource "google_cloud_run_service_iam_member" "default" {
   service  = "cloudrun-service"
   role     = "roles/run.invoker"
   member   = "allUsers"
+  depends_on = [ google_cloud_run_v2_service.default ]
 }
 data "google_artifact_registry_repository" "flask-repo" {
   location      = var.region
