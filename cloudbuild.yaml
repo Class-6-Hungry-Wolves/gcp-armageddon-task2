@@ -36,9 +36,10 @@ steps:
 
         echo "$${REVISIONS[0]}"
         echo "$${REVISIONS[1]}"
+        echo "$${REVISIONS[2]}"
 
         gcloud run services update-traffic cloudrun-service \
-          --to-revisions $${REVISIONS[0]}=50,$${REVISIONS[1]}=50 \
+          --to-revisions $${REVISIONS[0]}=40,$${REVISIONS[1]}=40,$${REVISIONS[2]}=20 \
           --region $_REGION 
 
 options:

@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket      = "terraform-state-jourdan"
+    bucket      = "terraformbucket61025"
     prefix      = "terraform/deploy"
     #credentials = "appdeploy-467712-21a6ba8a2566.json"
   }

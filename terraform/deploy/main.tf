@@ -34,12 +34,12 @@ resource "google_cloud_run_v2_service" "default" {
 
       env {
         name  = "IMAGE_URL"
-        value = "https://i.imgur.com/k4YCmaA.jpeg"
+        value = "https://i.imgur.com/Psl6hRt.gif"
       }
 
       env {
         name = "HEADER_TEXT"
-        value = "Theo Loves Waffle House!"
+        value = "Suge WAF loves Lizzo!"
       }
     }
   }
