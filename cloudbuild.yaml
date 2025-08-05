@@ -32,7 +32,7 @@ steps:
       - 'pipefail'
       - '-c'
       - |-
-        REVISIONS=$$(gcloud run revisions list --region=$_REGION --format="value(metadata.name)")
+        readarray -t REVISIONS < <(gcloud run revisions list --region=$_REGION --format="value(metadata.name)")
 
         echo "$${REVISIONS[0]}"
         echo "$${REVISIONS[1]}"
