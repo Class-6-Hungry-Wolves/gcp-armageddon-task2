@@ -1,7 +1,7 @@
 provider "google" {
   project     = var.project_id
   region      = var.region
-  credentials = "class65gcpproject-462600-3dd7a46c5330.json"
+  # credentials = "class65gcpproject-462600-3dd7a46c5330.json"
 }
 
 resource "google_cloud_run_service_iam_member" "default" {
