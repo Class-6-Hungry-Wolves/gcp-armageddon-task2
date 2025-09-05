@@ -4,11 +4,10 @@ provider "google" {
   credentials = "class65gcpproject-462600-3dd7a46c5330.json"
 }
 
-# test
 resource "google_artifact_registry_repository" "flask-repo" {
   location      = var.region
   repository_id = "flask-repository"
-  description   = "docker repository for flask app"
+  description   = "docker repository for flask app."
   format        = "DOCKER"
 }
 

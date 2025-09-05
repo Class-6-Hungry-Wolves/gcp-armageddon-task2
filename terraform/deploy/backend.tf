@@ -12,5 +12,3 @@ terraform {
     }
   }
 }
-
-#test
