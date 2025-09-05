@@ -1,38 +1,50 @@
 # Global env for steps
 steps:
-    # Build the image
-  - id: 'build image'
-    name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME', '.']
-    
-    # Push the image to Artifact Registry
-  - id: 'push image'
-    name: 'gcr.io/cloud-builders/docker'
-    args: ['push', '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME']
-
-    # Terraform apply for deploy
+  # Terraform apply for deploy
   - id: 'terraform init'
     name: 'hashicorp/terraform:1.12.0'
     dir: terraform/deploy
     script: terraform init
-
   - id: 'terraform plan'
     name: 'hashicorp/terraform:1.12.0'
     dir: terraform/deploy
     script: terraform plan -out=tfplan
-
   - id: 'terraform apply'
     name: 'hashicorp/terraform:1.12.0'
     dir: terraform/deploy
-    script: terraform apply tfplan 
+    script: terraform apply tfplan
+  # List revisions
+  - id: 'list revisions'
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - run
+      - revisions
+      - list
+      - --region=$_REGION
+
+  # script for traffic splits
+  - id: 'traffic split'
+    name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-eEuo'
+      - 'pipefail'
+      - '-c'
+      - |-
+        readarray -t REVISIONS < <(gcloud run revisions list --region=$_REGION --format="value(metadata.name)")
+
+        echo "$${REVISIONS[0]}"
+        echo "$${REVISIONS[1]}"
+        echo "$${REVISIONS[2]}"
+        echo "$${REVISIONS[3]}"
+
+        gcloud run services update-traffic cloudrun-service \
+          --to-revisions $${REVISIONS[0]}=40,$${REVISIONS[1]}=40,$${REVISIONS[2]}=10,$${REVISIONS[3]}=10 \
+          --region $_REGION 
 
 options:
   logging: CLOUD_LOGGING_ONLY
   env:
-    - 'TF_VAR_project_id=$PROJECT_ID' 
+    - 'TF_VAR_project_id=$PROJECT_ID'
     - 'TF_VAR_region=$_REGION'
-
-images:
-  - '$_REGION-docker.pkg.dev/$PROJECT_ID/$_REPO_NAME/$_IMAGE_NAME'
-
-#comment for trigger
